@@ -1,0 +1,35 @@
+app:
+  artifact: @project.artifactId@
+  name: @project.name@
+  version: @project.version@
+
+server:
+  port: ${PORT:8090}
+
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  profiles:
+    active: ${SCOPE:local}
+
+spring-doc:
+  api-docs:
+    path: "/swagger"
+  swagger-ui:
+    path: "/swagger-ui.html"
+
+logging:
+  level:
+    root: INFO
+
+aws:
+  cognito:
+    client-id: ${AWS_COGNITO_CLIENT_ID}
+    client-secret: ${AWS_COGNITO_CLIENT_SECRET_KEY}
+    user:
+      pool-id: ${AWS_COGNITO_USER_POOL_ID}
+
+  region: ${AWS_REGION}
+  access-key: ${AWS_ACCESS_KEY_ID}
+  secret-key: ${AWS_SECRET_ACCESS_KEY}
+
