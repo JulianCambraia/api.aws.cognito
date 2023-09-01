@@ -38,7 +38,8 @@ import java.util.Map;
 @Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class UserServiceImpl implements UserService {
-  private static final String ALGORITHM = "HmacSH256";
+  private static final String ALGORITHM = "HmacSHA256";
+  public static final String FORGOT_PASSWORD_RESULT = "palavra-passe esquecida result {}";
   private final CommonConfiguration commonConfiguration;
   private final AdminCreateUserRequest.Builder adminCreateUser;
   private final CognitoIdentityProviderClient cognitoClient;
@@ -91,26 +92,26 @@ public class UserServiceImpl implements UserService {
   
   @Override
   public void adminResetUserPassword(String username) {
-    AdminResetUserPasswordRequest adminResetUserPasswordRequest = adminResetUserPasswordRequest(username);
-    AdminResetUserPasswordResponse adminResetUserPasswordResponse = cognitoClient.adminResetUserPassword(adminResetUserPasswordRequest);
+    AdminResetUserPasswordRequest request = adminResetUserPasswordRequest(username);
+    AdminResetUserPasswordResponse adminResetUserPasswordResponse = cognitoClient.adminResetUserPassword(request);
     
-    log.info("palavra-passe esquecida result {}", adminResetUserPasswordResponse);
+    log.info(FORGOT_PASSWORD_RESULT, adminResetUserPasswordResponse);
   }
   
   @Override
   public void forgotPassword(String username) throws NoSuchAlgorithmException, InvalidKeyException {
-    ForgotPasswordRequest forgotPasswordRequest = forgotPasswordRequest(username);
-    ForgotPasswordResponse forgotPasswordResponse = cognitoClient.forgotPassword(forgotPasswordRequest);
+    ForgotPasswordRequest request = forgotPasswordRequest(username);
+    ForgotPasswordResponse forgotPasswordResponse = cognitoClient.forgotPassword(request);
     
-    log.info("palavra-passe esquecida result {}", forgotPasswordResponse);
+    log.info(FORGOT_PASSWORD_RESULT, forgotPasswordResponse);
   }
   
   @Override
   public void confirmForgotPassword(String confirmationCode, String password, String username) throws NoSuchAlgorithmException, InvalidKeyException {
-    ConfirmForgotPasswordRequest confirmForgotPasswordRequest = confirmForgotPasswordRequest(confirmationCode, password, username);
-    ConfirmForgotPasswordResponse confirmForgotPasswordResponse = cognitoClient.confirmForgotPassword(confirmForgotPasswordRequest);
+    ConfirmForgotPasswordRequest request = confirmForgotPasswordRequest(confirmationCode, password, username);
+    ConfirmForgotPasswordResponse confirmForgotPasswordResponse = cognitoClient.confirmForgotPassword(request);
     
-    log.info("palavra-passe esquecida result {}", confirmForgotPasswordResponse);
+    log.info(FORGOT_PASSWORD_RESULT, confirmForgotPasswordResponse);
     
   }
   
@@ -169,7 +170,7 @@ public class UserServiceImpl implements UserService {
     attributes.add(AttributeType.builder().name("name").value(userSignUpRequest.getName()).build());
     attributes.add(AttributeType.builder().name("email").value(userSignUpRequest.getEmail()).build());
     attributes.add(AttributeType.builder().name("gender").value("M").build());
-    attributes.add(AttributeType.builder().name("address").value("BH").build());
+    attributes.add(AttributeType.builder().name("address").value("SP").build());
     attributes.add(AttributeType.builder().name("birthdate").value(userSignUpRequest.getDateOfBirth()).build());
     return attributes;
   }
