@@ -40,7 +40,6 @@ import java.util.Map;
 public class UserServiceImpl implements UserService {
   private static final String ALGORITHM = "HmacSH256";
   private final CommonConfiguration commonConfiguration;
-  private final AttributeType.Builder attributeType;
   private final AdminCreateUserRequest.Builder adminCreateUser;
   private final CognitoIdentityProviderClient cognitoClient;
   private final AdminUpdateUserAttributesRequest.Builder adminUpdateUserAttributesRequest;
@@ -55,13 +54,12 @@ public class UserServiceImpl implements UserService {
     
     AdminCreateUserResponse response = cognitoClient.adminCreateUser(adminCreateUserRequest);
     log.info("register user for e-mail: {}", response);
-    
   }
   
   @Override
   public void adminUpdateUserAttributes(String oldName, String newName) {
     List<AttributeType> attributes = new ArrayList<>();
-    attributes.add(attributeType.name("name").value(newName).build());
+    attributes.add(AttributeType.builder().name("name").value(newName).build());
     
     AdminUpdateUserAttributesRequest adminUpdateUserRequest = adminUpdateUserAttributesRequest.username(oldName).userAttributes(attributes).build();
     cognitoClient.adminUpdateUserAttributes(adminUpdateUserRequest);
@@ -168,11 +166,11 @@ public class UserServiceImpl implements UserService {
   
   private List<AttributeType> prepareAttributesType(UserSignUpRequest userSignUpRequest) {
     List<AttributeType> attributes = new ArrayList<>();
-    attributes.add(attributeType.name("name").value(userSignUpRequest.getName()).build());
-    attributes.add(attributeType.name("email").value(userSignUpRequest.getEmail()).build());
-    attributes.add(attributeType.name("gender").value("M").build());
-    attributes.add(attributeType.name("address").value("BH").build());
-    attributes.add(attributeType.name("birthdate").value(userSignUpRequest.getDateOfBirth()).build());
+    attributes.add(AttributeType.builder().name("name").value(userSignUpRequest.getName()).build());
+    attributes.add(AttributeType.builder().name("email").value(userSignUpRequest.getEmail()).build());
+    attributes.add(AttributeType.builder().name("gender").value("M").build());
+    attributes.add(AttributeType.builder().name("address").value("BH").build());
+    attributes.add(AttributeType.builder().name("birthdate").value(userSignUpRequest.getDateOfBirth()).build());
     return attributes;
   }
 }
